@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const router = Router()
+const { encrypt, decrypt } = require('../utils/encrypt')
 
 const snippets = require('../seedData.json')
 
@@ -7,6 +8,11 @@ let id = snippets.length
 
 router.get("/", (req, res) => {
     const { language } = req.query
+
+    const decryptedSnippets = snippets.map(snippet => ({
+        ...snippet,
+        code: decrypt(snippet.code)
+    }))
 
     if (language) {
         const filteredLanguages = snippets.filter(
@@ -25,6 +31,7 @@ router.get("/:id", (req, res) => {
         return res.status(404).json({ error: 'Snippet not found' })
     }
 
+    snippet.code = decrypt(snippet.code)
     res.json(snippet)
 })
 
@@ -43,7 +50,7 @@ router.post("/", (req, res) => {
         code
     }
 
-    snippets.push(snippet)
+    snippets.push({...snippet, code: encrypt(code)});
     res.status(201).json(snippet)
 })
 
