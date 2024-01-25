@@ -1,7 +1,7 @@
 function basicAuth(req, res, next) {
     const authHeader = req.headers.authorization
 
-    if (!authHeader || !authHeaders.startsWith('Basic ')) {
+    if (!authHeader || !authHeader.startsWith('Basic ')) {
         return res.status(401).json({ error: 'Unauthorized'})
     }
 
