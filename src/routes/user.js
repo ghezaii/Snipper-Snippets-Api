@@ -20,7 +20,7 @@ route.post('/', basicAuth, async (req, res) => {
     }
 
     users.push(user)
-    res.send(201).json({ id, email })
+    res.status(201).json({ id, email })
 })
 
 route.post('/login', basicAuth, async (req, res) => {
