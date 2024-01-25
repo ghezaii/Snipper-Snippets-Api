@@ -1,12 +1,13 @@
 const { Router } = require('express')
 const router = Router()
 const { encrypt, decrypt } = require('../utils/encrypt')
+const authorize = require('../middleware/authorize')
 
 const snippets = require('../seedData.json')
 
 let id = snippets.length
 
-router.get("/", (req, res) => {
+router.get("/", authorize, (req, res) => {
     const { language } = req.query
 
     const decryptedSnippets = snippets.map(snippet => ({
@@ -23,7 +24,7 @@ router.get("/", (req, res) => {
     res.send(snippets)
 })
 
-router.get("/:id", (req, res) => {
+router.get("/:id", authorize, (req, res) => {
     const snippetId = parseInt(req.params.id)
     const snippet = snippets.find(snippet => snippet.id === snippetId)
 
@@ -35,7 +36,7 @@ router.get("/:id", (req, res) => {
     res.json(snippet)
 })
 
-router.post("/", (req, res) => {
+router.post("/", authorize, (req, res) => {
     const { language, code } = req.body
 
     if (!language || !code) {
